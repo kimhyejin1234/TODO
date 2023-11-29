@@ -17,7 +17,7 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
-
+    
     @Test
     @DisplayName("중복된 이메일로 회원가입을 시도하면 " +
             "RuntimeException이 발생해야 한다.")

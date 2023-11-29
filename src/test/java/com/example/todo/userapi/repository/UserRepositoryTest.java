@@ -19,7 +19,7 @@ class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
-
+    
     @Test
     @DisplayName("회원가입 테스트")
     void saveTest() {
@@ -54,18 +54,31 @@ class UserRepositoryTest {
         System.out.println("user = " + user);
         System.out.println("\n\n\n");
     }
-
+    
     @Test
-    @DisplayName("이메일 중복체크를 하면 중복값이 false여야 한다.")
-    void emailIsNotPresent() {
+    @DisplayName("이메일 중복체크를 하면 중복값이 true여야 한다.")
+    void emailIsPresent() {
         //given
-        String email = "kim1234@abc.com";
-
+        String email = "abc1234@abc.com";
+        
         //when
         boolean flag = userRepository.existsByEmail(email);
 
         //then
         assertTrue(flag);
+    }
+
+    @Test
+    @DisplayName("이메일 중복체크를 하면 중복값이 false여야 한다.")
+    void emailIsNotPresent() {
+        //given
+        String email = "kim1234@naver.com";
+
+        //when
+        boolean flag = userRepository.existsByEmail(email);
+
+        //then
+        assertFalse(flag);
     }
 
 }

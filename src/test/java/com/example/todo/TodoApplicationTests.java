@@ -17,17 +17,27 @@ class TodoApplicationTests {
 	@Test
 	@DisplayName("토큰 서명 해시값 생성하기")
 	void makeSecretKey() {
-	    //given
 		SecureRandom random = new SecureRandom();
 		byte[] key = new byte[64]; // 64byte -> 512bit
 		random.nextBytes(key);
 		String encodedKey = Base64.getEncoder().encodeToString(key);
-		System.out.println("\n\n\\n");
+		System.out.println("\n\n\n");
 		System.out.println("encodedKey = " + encodedKey);
-		System.out.println("\n\n\\n");
-	    //when
-
-	    //then
+		System.out.println("\n\n\n");
 	}
 
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+

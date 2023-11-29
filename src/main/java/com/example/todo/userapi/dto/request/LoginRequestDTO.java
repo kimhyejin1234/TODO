@@ -6,9 +6,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Setter @Getter
-@ToString @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@ToString @EqualsAndHashCode
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class LoginRequestDTO {
 
@@ -18,6 +17,5 @@ public class LoginRequestDTO {
 
     @NotBlank
     private String password;
-
 
 }

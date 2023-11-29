@@ -1,6 +1,8 @@
 package com.example.todo.userapi.api;
 
+import com.example.todo.userapi.dto.request.LoginRequestDTO;
 import com.example.todo.userapi.dto.request.UserRequestSignUpDTO;
+import com.example.todo.userapi.dto.response.LoginResponseDTO;
 import com.example.todo.userapi.dto.response.UserSignUpResponseDTO;
 import com.example.todo.userapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class UserController {
 
-
     private final UserService userService;
 
     // 이메일 중복 확인 요청 처리
-    // GET: /api/auth/check?eamil=zzzz@xxx.com
-
+    // GET: /api/auth/check?email=zzzz@xxx.com
     @GetMapping("/check")
     public ResponseEntity<?> check(String email) {
         if(email.trim().isEmpty()) {
@@ -47,7 +47,7 @@ public class UserController {
 
         if(result.hasErrors()) {
             log.warn(result.toString());
-            return  ResponseEntity.badRequest()
+            return ResponseEntity.badRequest()
                     .body(result.getFieldError());
         }
 
@@ -58,8 +58,36 @@ public class UserController {
             log.info("이메일 중복!");
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // 로그인 요청 처리
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(
+            @Validated @RequestBody LoginRequestDTO dto
+    ) {
+        try {
+            LoginResponseDTO responseDTO
+                    = userService.authenticate(dto);
+
+            return ResponseEntity.ok().body(responseDTO);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
 
     }
 
 
+
+
 }
+
+
+
+
+
+
+
+
