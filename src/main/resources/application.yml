@@ -37,7 +37,13 @@ kakao:
 upload:
   path: C:/todo_upload
 
-
+# s3 접근 설정
+aws:
+  credentials:
+    accessKey:
+    secretKey:
+  region: ap-northeast-2
+  bucketName:
 
 
 

@@ -2,6 +2,8 @@ package com.example.todo.filter;
 
 import com.example.todo.auth.TokenProvider;
 import com.example.todo.auth.TokenUserInfo;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -40,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.info("JWT Token Filter is running... - token: {}", token);
 
             // 토큰 위조검사 및 인증 완료 처리
-            if(token != null) {
+            if(token != null && !token.equals("null")) {
                 // 토큰 서명 위조 검사와 토큰을 파싱해서 클레임을 얻어내는 작업
                 TokenUserInfo userInfo
                         = tokenProvider.validateAndGetTokenUserInfo(token);
@@ -64,12 +66,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 // 스프링 시큐리티 컨테이너에 인증 정보 객체 등록
-                 SecurityContextHolder.getContext().setAuthentication(auth);
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
+            } else {
+                log.info("token이 null 입니다.");
             }
+        } catch (ExpiredJwtException e) {
+            log.warn("토큰의 기한이 만료되었습니다!");
+            throw new JwtException("토큰 기한 만료!");
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("서명이 일치하지 않습니다! 토큰이 위조 되었습니다!");
+            log.warn("서명이 일치하지 않습니다! 토큰이 위조 되었습니다!");
         }
 
         // 필터 체인에 내가 만든 필터 실행 명령
@@ -83,11 +90,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // -- content-type : application/json
         // -- Authorization : Bearer asboeo3n4ok4nosnkdl...
         String bearerToken = request.getHeader("Authorization");
+        log.info("bearerToken: " + bearerToken);
 
         // 요청 헤더에서 가져온 토큰은 순수 토큰 값이 아닌
         // 앞에 Bearer가 붙어있으니 이것을 제거하는 작업
         if(StringUtils.hasText(bearerToken)
                 && bearerToken.startsWith("Bearer")) {
+            log.info("뭐라도 값이 있다.");
             return bearerToken.substring(7);
         }
         return null;

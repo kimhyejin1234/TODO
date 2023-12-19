@@ -219,6 +219,24 @@ public class UserController {
     }
 
 
+    //s3에서 불러온 프로필 사진 처리
+    @GetMapping("/load-s3")
+    public  ResponseEntity<?> loadS3(
+            @AuthenticationPrincipal TokenUserInfo userInfo
+
+    ){
+        log.info("/API/AUTH/LOAD -S3 - GET - USER:{}", userInfo);
+        try {
+            String profilePath = userService.findProfilePath(userInfo.getUserId());
+            return  ResponseEntity.ok().body(profilePath);
+        } catch ( Exception e){
+            e.printStackTrace();
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+
 
 }
 
